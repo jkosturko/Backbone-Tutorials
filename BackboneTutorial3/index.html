@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>I have a back bone</title>
+</head>
+<body>
+	<button id="add-friends">Add Friend</button>
+	<ul id="friends-list">
+		
+	</ul>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.3/underscore-min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.9/backbone-min.js"></script>
+</body>
+
+<script type="text/javascript">
+(function() {
+	Friend = Backbone.Model.extend({	
+			name: null
+	});
+
+	Friends = Backbone.Collection.extend({
+		initialize: function (models, options) {
+			this.bind('add', options.view.addFriendLi);
+		}
+	});
+	
+	AppView = Backbone.View.extend({
+	el: $('body'),
+	initialize: function() {
+			this.friends = new Friends(null, {view: this});
+	},
+	events: {
+		"click #add-friends": "showPrompt"
+	},
+	showPrompt: function () {
+		var friend_name = prompt("Who is your friend?");
+		var friend_model = new Friend({name:friend_name});
+		this.friends.add( friend_model );
+	},
+	addFriendLi: function (model) {
+		$('#friends-list').append('<li>'+ model.get('name') +'</li>');
+	}
+});
+
+var appview = new AppView();
+
+}(jQuery));
+
+</script>
+</html>
